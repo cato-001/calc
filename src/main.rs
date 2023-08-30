@@ -6,16 +6,18 @@ fn main() {
 
 enum Expression {
     Number(i32),
+    Negative(Box<Self>),
     Add(Box<(Self, Self)>),
 }
 
 impl Expression {
     fn evaluate(&self) -> i32 {
         match self {
-            Expression::Number(value) => *value,
-            Expression::Add(values) => {
-                let (value, other) = values.as_ref();
-                value.evaluate() + other.evaluate()
+            Self::Number(value) => *value,
+            Self::Negative(value) => -value.evaluate(),
+            Self::Add(expressions) => {
+                let (expression, other) = expressions.as_ref();
+                expression.evaluate() + other.evaluate()
             }
         }
     }
