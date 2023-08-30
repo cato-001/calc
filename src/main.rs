@@ -1,3 +1,5 @@
+use nom::IResult;
+
 fn main() {
     let expression = Expression::Add((Expression::Number(73), Expression::Number(12312)).into());
     let result = expression.evaluate();
@@ -11,6 +13,14 @@ enum Expression {
 }
 
 impl Expression {
+    fn parse(&self, input: &str) -> Result<Self, SyntaxError> {
+
+    }
+
+    fn inner_parse(&self, input: &str) -> IResult<&str, Self> {
+
+    }
+
     fn evaluate(&self) -> i32 {
         match self {
             Self::Number(value) => *value,
@@ -21,4 +31,8 @@ impl Expression {
             }
         }
     }
+}
+
+struct SyntaxError {
+    value: String
 }
