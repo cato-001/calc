@@ -1,38 +1,17 @@
-use nom::IResult;
+use std::env;
+use crate::expression::Expression;
+
+mod expression;
+mod error;
 
 fn main() {
-    let expression = Expression::Add((Expression::Number(73), Expression::Number(12312)).into());
-    let result = expression.evaluate();
-    println!("{}", result)
-}
-
-enum Expression {
-    Number(i32),
-    Negative(Box<Self>),
-    Add(Box<(Self, Self)>),
-}
-
-impl Expression {
-    fn parse(&self, input: &str) -> Result<Self, SyntaxError> {
-
-    }
-
-    fn inner_parse(&self, input: &str) -> IResult<&str, Self> {
-
-    }
-
-    fn evaluate(&self) -> i32 {
-        match self {
-            Self::Number(value) => *value,
-            Self::Negative(value) => -value.evaluate(),
-            Self::Add(expressions) => {
-                let (expression, other) = expressions.as_ref();
-                expression.evaluate() + other.evaluate()
-            }
+    let results = env::args().skip(1).map(|arg| {
+        Expression::parse(&arg).map(|expression| expression.evaluate())
+    });
+    for result in results {
+        match result {
+            Ok(value) => println!("{}", value),
+            Err(error) => println!("SyntaxError({})", error)
         }
     }
-}
-
-struct SyntaxError {
-    value: String
 }
