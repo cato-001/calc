@@ -1,3 +1,4 @@
+use crate::expression::add_and_sub::AddAndSub;
 use nom::branch::alt;
 use nom::character::complete::one_of;
 use nom::multi::many1;
@@ -7,18 +8,18 @@ use crate::expression::negative::Negative;
 use crate::expression::number::Number;
 use crate::expression::Expression;
 
-pub struct AddAndSub {
+pub struct MulAndDiv {
   start: Box<Expression>,
   parts: Vec<(Operator, Expression)>,
 }
 
-impl AddAndSub {
+impl MulAndDiv {
   pub fn parser(input: &str) -> IResult<&str, Expression> {
     let (input, start) = inner_expression(input)?;
     let (input, parts) = many1(inner_expression_with_operator)(input)?;
     Ok((
       input,
-      Expression::AddAndSub(Self {
+      Expression::MulAndDiv(Self {
         start: start.into(),
         parts,
       }),
@@ -29,28 +30,28 @@ impl AddAndSub {
     self
       .parts
       .iter()
-      .fold(self.start.evaluate(), |sum, current| {
+      .fold(self.start.evaluate(), |combined, current| {
         let (operator, expression) = current;
         let result = expression.evaluate();
         match operator {
-          Operator::Add => sum + result,
-          Operator::Sub => sum - result,
+          Operator::Mul => combined * result,
+          Operator::Div => combined / result,
         }
       })
   }
 }
 
 enum Operator {
-  Add,
-  Sub,
+  Mul,
+  Div,
 }
 
 impl Operator {
   fn parser(input: &str) -> IResult<&str, Operator> {
-    let (input, operator) = one_of("+-")(input)?;
+    let (input, operator) = one_of("x*/")(input)?;
     let operator = match operator {
-      '+' => Self::Add,
-      '-' => Self::Sub,
+      'x' | '*' => Self::Mul,
+      '/' => Self::Div,
       _ => unreachable!(),
     };
     Ok((input, operator))

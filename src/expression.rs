@@ -3,11 +3,13 @@ use nom::combinator::complete;
 use nom::{Finish, IResult};
 
 use crate::error::SyntaxError;
-use crate::expression::add::AddAndSub;
+use crate::expression::add_and_sub::AddAndSub;
+use crate::expression::mul_and_div::MulAndDiv;
 use crate::expression::negative::Negative;
 use crate::expression::number::Number;
 
-mod add;
+mod add_and_sub;
+mod mul_and_div;
 mod negative;
 mod number;
 mod symbol;
@@ -16,6 +18,7 @@ pub enum Expression {
   Number(Number),
   Negative(Negative),
   AddAndSub(AddAndSub),
+  MulAndDiv(MulAndDiv),
 }
 
 impl Expression {
@@ -36,7 +39,12 @@ impl Expression {
   }
 
   fn parser(input: &str) -> IResult<&str, Self> {
-    complete(alt((AddAndSub::parser, Negative::parser, Number::parser)))(input)
+    complete(alt((
+      MulAndDiv::parser,
+      AddAndSub::parser,
+      Negative::parser,
+      Number::parser,
+    )))(input)
   }
 }
 
@@ -46,6 +54,7 @@ impl Expression {
       Self::Number(expression) => expression.evaluate(),
       Self::Negative(expression) => expression.evaluate(),
       Self::AddAndSub(expression) => expression.evaluate(),
+      Self::MulAndDiv(expression) => expression.evaluate(),
     }
   }
 }
