@@ -1,17 +1,16 @@
 use nom::character::complete::i32;
 use nom::IResult;
-use crate::expression::Expression;
 
-pub struct Number(i32);
+pub struct Value(i32);
 
-impl Number {
-    pub fn parser(input: &str) -> IResult<&str, Expression> {
-        i32(input).map(|result| (result.0, Expression::Number(Self(result.1))))
-    }
+impl Value {
+  pub fn parser<Number>(input: &str) -> IResult<&str, Number> {
+    i32(input).map(|result| (result.0, Expression::Number(Self(result.1))))
+  }
 }
 
-impl Number {
-    pub fn evaluate(&self) -> i32 {
-        self.0
-    }
+impl Value {
+  pub fn evaluate(&self) -> i32 {
+    self.0
+  }
 }

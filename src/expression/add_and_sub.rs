@@ -3,9 +3,9 @@ use nom::character::complete::one_of;
 use nom::multi::many1;
 use nom::IResult;
 
-use crate::expression::mul_and_div::MulAndDiv;
+use crate::expression::mul_and_div::{mul_and_div, MulAndDiv};
 use crate::expression::negative::Negative;
-use crate::expression::number::Number;
+use crate::expression::number::Value;
 use crate::expression::Expression;
 
 pub struct AddAndSub {
@@ -64,6 +64,6 @@ fn inner_expression_with_operator(input: &str) -> IResult<&str, (Operator, Expre
   Ok((input, (operator, expression)))
 }
 
-fn inner_expression(input: &str) -> IResult<&str, Expression> {
-  alt((MulAndDiv::parser, Number::parser, Negative::parser))(input)
+fn inner_expression<Number>(input: &str) -> IResult<&str, Number> {
+  alt((mul_and_div, Value::parser, Negative::parser))(input)
 }
