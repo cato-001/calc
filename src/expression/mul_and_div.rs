@@ -1,14 +1,13 @@
+use crate::expression::negative::negative;
 use nom::branch::alt;
 use nom::character::complete::one_of;
 use nom::IResult;
-use std::ops::{Div, Mul};
 
-use crate::expression::negative::Negative;
-use crate::expression::number::Value;
+use crate::number::ParsableNumber;
 
 pub fn mul_and_div<Number>(input: &str) -> IResult<&str, Number>
 where
-  Number: Mul<Output = Number> + Div<Output = Number>,
+  Number: ParsableNumber,
 {
   let (mut input, mut result) = inner_expression(input)?;
   loop {
@@ -42,12 +41,18 @@ impl Operator {
   }
 }
 
-fn inner_expression_with_operator<Number>(input: &str) -> IResult<&str, (Operator, Number)> {
+fn inner_expression_with_operator<Number>(input: &str) -> IResult<&str, (Operator, Number)>
+where
+  Number: ParsableNumber,
+{
   let (input, operator) = Operator::parser(input)?;
   let (input, expression) = inner_expression(input)?;
   Ok((input, (operator, expression)))
 }
 
-fn inner_expression<Number>(input: &str) -> IResult<&str, Number> {
-  alt((Value::parser, Negative::parser))(input)
+fn inner_expression<Number>(input: &str) -> IResult<&str, Number>
+where
+  Number: ParsableNumber,
+{
+  alt((Number::parse, negative))(input)
 }
