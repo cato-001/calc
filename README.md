@@ -26,7 +26,13 @@ Therefore, integers use integer divisions and are rounded down.
 
 ## Supported Syntax
 
-> Numbers: 6
+Any whitespace is interpreted as a divider between expressions:
+
+    "5+23 4*6" => "28 24"
+
+These elements can be used to construct the expressions:
+
+> Numbers: 6 and 6.5
 > 
 > Negatives: -6 and -(4+1)
 > 
@@ -38,7 +44,7 @@ Therefore, integers use integer divisions and are rounded down.
 > 
 > Division: 6/4
 > 
-> Parenthesis: (2+4)
+> Parenthesis: (2+4) or [2+4]
 
 ## Architecture
 
