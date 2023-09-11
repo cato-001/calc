@@ -6,12 +6,13 @@ use crate::error::SyntaxError;
 use crate::expression::add_and_sub::add_and_sub;
 use crate::expression::mul_and_div::mul_and_div;
 use crate::expression::negative::negative;
+use crate::expression::parenthesis::parenthesis;
 use crate::number::ParsableNumber;
 
 mod add_and_sub;
 mod mul_and_div;
 mod negative;
-mod number;
+mod parenthesis;
 mod symbol;
 
 pub fn evaluate<Number>(input: &str) -> Result<Number, SyntaxError>
@@ -37,5 +38,11 @@ fn expression<Number>(input: &str) -> IResult<&str, Number>
 where
   Number: ParsableNumber,
 {
-  complete(alt((add_and_sub, mul_and_div, negative, Number::parse)))(input)
+  complete(alt((
+    add_and_sub,
+    mul_and_div,
+    parenthesis,
+    negative,
+    Number::parse,
+  )))(input)
 }

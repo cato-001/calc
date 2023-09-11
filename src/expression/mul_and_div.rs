@@ -1,4 +1,5 @@
 use crate::expression::negative::negative;
+use crate::expression::parenthesis::parenthesis;
 use nom::branch::alt;
 use nom::character::complete::one_of;
 use nom::IResult;
@@ -54,5 +55,5 @@ fn inner_expression<Number>(input: &str) -> IResult<&str, Number>
 where
   Number: ParsableNumber,
 {
-  alt((negative, Number::parse))(input)
+  alt((parenthesis, negative, Number::parse))(input)
 }

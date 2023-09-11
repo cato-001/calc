@@ -4,6 +4,7 @@ use nom::IResult;
 
 use crate::expression::mul_and_div::mul_and_div;
 use crate::expression::negative::negative;
+use crate::expression::parenthesis;
 use crate::number::ParsableNumber;
 
 pub fn add_and_sub<Number>(input: &str) -> IResult<&str, Number>
@@ -55,5 +56,5 @@ fn inner_expression<Number>(input: &str) -> IResult<&str, Number>
 where
   Number: ParsableNumber,
 {
-  alt((mul_and_div, Number::parse, negative))(input)
+  alt((mul_and_div, parenthesis, Number::parse, negative))(input)
 }
