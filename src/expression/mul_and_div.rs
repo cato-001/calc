@@ -54,5 +54,5 @@ fn inner_expression<Number>(input: &str) -> IResult<&str, Number>
 where
   Number: ParsableNumber,
 {
-  alt((Number::parse, negative))(input)
+  alt((negative, Number::parse))(input)
 }
