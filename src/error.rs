@@ -1,18 +1,19 @@
 use derive_more::{Display, Error};
 
 #[derive(Debug, Display, Error)]
+#[display("SyntaxError({value})")]
 pub struct SyntaxError {
-    value: String,
+  value: String,
 }
 
 impl SyntaxError {
-    pub fn new(value: String) -> Self {
-        Self { value }
-    }
+  pub fn new(value: String) -> Self {
+    Self { value }
+  }
 }
 
 impl From<nom::error::Error<&str>> for SyntaxError {
-    fn from(error: nom::error::Error<&str>) -> Self {
-        Self::new(format!("{}", error))
-    }
+  fn from(error: nom::error::Error<&str>) -> Self {
+    Self::new(format!("{}", error))
+  }
 }
