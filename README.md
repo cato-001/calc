@@ -1,6 +1,6 @@
 # CALC
 
-This is a simple CLI script to evaluate simple math expression.
+This is a simple CLI script to evaluate math expression.
 
 ## Usage
 
