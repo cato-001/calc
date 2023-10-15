@@ -1,6 +1,6 @@
 use derive_more::{Display, Error};
 
-#[derive(Debug, Display, Error)]
+#[derive(Debug, Display, Error, PartialEq, Eq)]
 #[display("SyntaxError({value})")]
 pub struct SyntaxError {
   value: String,

@@ -61,3 +61,21 @@ fn evaluate_and_print(expression: &str) {
     Err(error) => eprintln!("{}", error),
   };
 }
+
+#[cfg(test)]
+mod tests {
+  use crate::error::SyntaxError;
+  use super::*;
+
+  #[test]
+  fn can_evaluate_expression() {
+    let result = evaluate("4+5/2-(2*3)");
+    assert_eq!(result, Ok(0.5f64))
+  }
+
+  #[test]
+  fn error_when_evaluating() {
+    let result = evaluate::<f64>("4+5/");
+    assert_eq!(result, Err(SyntaxError::new("ExpressionParsingIncomplete: /".to_owned())))
+  }
+}
